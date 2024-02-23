@@ -94,7 +94,7 @@ def calculate_shortest_path():
 
         # Calculate the shortest path and its length
         total_distance =  nx.shortest_path_length(G, source_node, target_node, weight=custom_weight)
-        travel_time = nx.shortest_path_length(G, source_node, target_node, weight='travel_time')
+        time_of_travel = nx.shortest_path_length(G, source_node, target_node, weight='travel_time')
         
 
 
@@ -102,7 +102,7 @@ def calculate_shortest_path():
         path_coordinates = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
         folium.PolyLine(locations=path_coordinates, color='blue', weight=5).add_to(mymap)
 
-        time_of_travel = total_distance / 30  # Assuming average speed of 30 m/s
+        # time_of_travel = total_distance / 30  # Assuming average speed of 30 m/s
         print("total_distance, time_of_travel: ",total_distance, time_of_travel)
         # Add markers for source and destination with popups showing distance and time of travel
         folium.Marker(location=[source_location[0], source_location[1]], popup=f"Source: {source_name}").add_to(mymap)
