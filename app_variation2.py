@@ -50,6 +50,16 @@ def block_road():
         path_coordinates = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
         folium.PolyLine(locations=path_coordinates, color='red', weight=3).add_to(mymap)
 
+        # Add markers for source and destination cities
+        folium.Marker(location=[source_location[0], source_location[1]], popup=f"Source: {source_name}").add_to(mymap)
+        folium.Marker(location=[destination_location[0], destination_location[1]], popup=f"Destination: {destination_name}").add_to(mymap)
+
+        # # Add markers for blocked nodes
+        # for node in blocked_nodes:
+        #     node_data = G.nodes[node]
+        #     folium.Marker(location=[node_data['y'], node_data['x']], popup=f"Blocked Node: {node}").add_to(mymap)
+
+
         # Update the map display
         map_widget.setHtml(mymap.get_root().render())
 
@@ -82,9 +92,21 @@ def calculate_shortest_path():
 
         shortest_path = nx.shortest_path(G, source_node, target_node, weight=custom_weight)
 
+        # Calculate the shortest path and its length
+        total_distance =  nx.shortest_path_length(G, source_node, target_node, weight=custom_weight)
+        time_of_travel = nx.shortest_path_length(G, source_node, target_node, weight='travel_time')
+        
+
+
         # Highlight shortest path on map
         path_coordinates = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
         folium.PolyLine(locations=path_coordinates, color='blue', weight=5).add_to(mymap)
+
+        # time_of_travel = total_distance / 30  # Assuming average speed of 30 m/s
+        print("total_distance, time_of_travel: ",total_distance, time_of_travel)
+        # Add markers for source and destination with popups showing distance and time of travel
+        folium.Marker(location=[source_location[0], source_location[1]], popup=f"Source: {source_name}").add_to(mymap)
+        folium.Marker(location=[destination_location[0], destination_location[1]], popup=f"Destination: {destination_name}\nDistance: {total_distance:.2f} meters\nTime of Travel: {time_of_travel:.2f} hours").add_to(mymap)
 
         # Update the map display
         map_widget.setHtml(mymap.get_root().render())
